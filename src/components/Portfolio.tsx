@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState, type ReactNode, type MouseEvent } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode, type MouseEvent } from "react";
 import { motion, useScroll, useSpring, useTransform, useMotionValue, useInView, AnimatePresence, type Variants } from "framer-motion";
 import { PROJECTS as PORTFOLIO_PROJECTS } from "../lib/projects";
 
@@ -10,6 +10,8 @@ const PROFILE_LINKS = {
   projectLive: "https://edu-vault-nine.vercel.app/",
   projectSource: "https://github.com/abhayrajput2005/EduVault-Backend",
 };
+
+const CONTACT_EMAIL = "abhayrajputg0007@gmail.com";
 
 const FOCUS_RING_CLASS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.85_0.18_200)] focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 import {
@@ -155,6 +157,12 @@ function Nav() {
     f(); window.addEventListener("scroll", f);
     return () => window.removeEventListener("scroll", f);
   }, []);
+
+  const handleContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "py-3" : "py-5"}`}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
@@ -169,8 +177,8 @@ function Nav() {
             </a>
           ))}
         </nav>
-        <a href="#contact" aria-label="Contact me" className={`hidden rounded-full bg-[image:var(--gradient-aurora)] px-4 py-2 text-xs font-semibold text-background shadow-[0_0_20px_oklch(0.72_0.2_260/0.5)] transition-transform hover:scale-105 md:inline-block ${FOCUS_RING_CLASS}`}>
-          Hire me
+        <a href="#contact" onClick={handleContactClick} aria-label="Contact me" className={`hidden rounded-full bg-[image:var(--gradient-aurora)] px-4 py-2 text-xs font-semibold text-background shadow-[0_0_20px_oklch(0.72_0.2_260/0.5)] transition-transform hover:scale-105 md:inline-block ${FOCUS_RING_CLASS}`}>
+          Let's Connect
         </a>
       </div>
     </header>
@@ -1372,22 +1380,23 @@ function GitHub() {
 }
 
 /* ---------- Contact ---------- */
-function Field({ label, type = "text", textarea = false }: { label: string; type?: string; textarea?: boolean }) {
-  const [val, setVal] = useState("");
+function Field({ label, type = "text", textarea = false, value, onChange, error, name }: { label: string; type?: string; textarea?: boolean; value: string; onChange: (value: string) => void; error?: string; name: string }) {
   const [focus, setFocus] = useState(false);
-  const active = focus || val.length > 0;
+  const active = focus || value.length > 0;
+
   return (
     <div className="relative">
       <label className={`pointer-events-none absolute left-4 transition-all ${active ? "top-1.5 text-[10px] uppercase tracking-wider text-[oklch(0.85_0.18_200)]" : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground"}`}>
         {label}
       </label>
       {textarea ? (
-        <textarea value={val} rows={4} onChange={(e) => setVal(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} aria-label={label}
+        <textarea name={name} value={value} rows={4} onChange={(e) => onChange(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} aria-label={label}
           className="w-full resize-none rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.6)] px-4 pb-3 pt-6 text-sm outline-none transition-all focus:border-[oklch(0.72_0.2_260)] focus:shadow-[0_0_20px_oklch(0.72_0.2_260/0.3)]" />
       ) : (
-        <input type={type} value={val} onChange={(e) => setVal(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} aria-label={label}
+        <input name={name} type={type} value={value} onChange={(e) => onChange(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} aria-label={label}
           className={`w-full rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.6)] px-4 text-sm outline-none transition-all focus:border-[oklch(0.72_0.2_260)] focus:shadow-[0_0_20px_oklch(0.72_0.2_260/0.3)] ${active ? "pb-2 pt-6 h-14" : "h-14"}`} />
       )}
+      {error ? <p className="mt-2 text-xs text-rose-300">{error}</p> : null}
     </div>
   );
 }
@@ -1403,10 +1412,10 @@ function Contact() {
               <p className="mt-2 text-sm text-muted-foreground">I usually reply within a day. Let's chat about AI, products, or your next project.</p>
               <div className="mt-6 space-y-3">
                 {[
-                  { icon: Mail, label: "Email", value: "hello@abhaykumar.dev", href: PROFILE_LINKS.email },
-                  { icon: Github, label: "GitHub", value: "github.com/abhaykumar", href: PROFILE_LINKS.github },
-                  { icon: Linkedin, label: "LinkedIn", value: "linkedin.com/in/abhay-kumar", href: PROFILE_LINKS.linkedin },
-                  { icon: Download, label: "Resume", value: "Request available on email", href: PROFILE_LINKS.resume },
+                  { icon: Mail, label: "Email", value: "abhayrajputg0007@gmail.com", href: PROFILE_LINKS.email },
+                  { icon: Github, label: "GitHub", value: "github.com/abhayrajput2005", href: PROFILE_LINKS.github },
+                  { icon: Linkedin, label: "LinkedIn", value: "linkedin.com/in/abhay-kumar-2005-", href: PROFILE_LINKS.linkedin },
+                  { icon: Download, label: "Resume", value: "Download Resume", href="/resume/Abhay_Kumar_Resume.pdf" },
                 ].map((c) => (
                   <a key={c.label} href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={`${c.label}: ${c.value}`} title={`${c.label}: ${c.value}`}
                     className={`group flex items-center gap-3 rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.5)] p-3 transition-all hover:border-[oklch(0.72_0.2_260)] hover:bg-[oklch(0.18_0.05_280/0.7)] ${FOCUS_RING_CLASS}`}>
