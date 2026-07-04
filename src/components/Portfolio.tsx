@@ -1380,6 +1380,19 @@ function GitHub() {
 }
 
 /* ---------- Contact ---------- */
+type ContactFieldName = "name" | "email" | "subject" | "message";
+
+type ContactFormValues = Record<ContactFieldName, string>;
+
+type ContactFormErrors = Partial<Record<ContactFieldName, string>>;
+
+const INITIAL_CONTACT_FORM_VALUES: ContactFormValues = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+};
+
 function Field({ label, type = "text", textarea = false, value, onChange, error, name }: { label: string; type?: string; textarea?: boolean; value: string; onChange: (value: string) => void; error?: string; name: string }) {
   const [focus, setFocus] = useState(false);
   const active = focus || value.length > 0;
@@ -1401,6 +1414,58 @@ function Field({ label, type = "text", textarea = false, value, onChange, error,
   );
 }
 function Contact() {
+  const [formValues, setFormValues] = useState<ContactFormValues>(INITIAL_CONTACT_FORM_VALUES);
+  const [errors, setErrors] = useState<ContactFormErrors>({});
+
+  const updateField = (field: ContactFieldName) => (value: string) => {
+    setFormValues((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const validateForm = (values: ContactFormValues): ContactFormErrors => {
+    const nextErrors: ContactFormErrors = {};
+
+    if (!values.name.trim()) {
+      nextErrors.name = "Name is required.";
+    }
+
+    if (!values.email.trim()) {
+      nextErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
+      nextErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!values.subject.trim()) {
+      nextErrors.subject = "Subject is required.";
+    }
+
+    if (!values.message.trim()) {
+      nextErrors.message = "Message is required.";
+    }
+
+    return nextErrors;
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const nextErrors = validateForm(formValues);
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    const subject = encodeURIComponent(formValues.subject.trim());
+    const body = encodeURIComponent(
+      `Name:\n${formValues.name.trim()}\n\nEmail:\n${formValues.email.trim()}\n\nMessage:\n${formValues.message.trim()}`
+    );
+
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    setFormValues(INITIAL_CONTACT_FORM_VALUES);
+    setErrors({});
+  };
+
   return (
     <section id="contact" className="relative py-28">
       <div className="mx-auto max-w-5xl px-5">
@@ -1412,10 +1477,33 @@ function Contact() {
               <p className="mt-2 text-sm text-muted-foreground">I usually reply within a day. Let's chat about AI, products, or your next project.</p>
               <div className="mt-6 space-y-3">
                 {[
-                  { icon: Mail, label: "Email", value: "abhayrajputg0007@gmail.com", href: PROFILE_LINKS.email },
-                  { icon: Github, label: "GitHub", value: "github.com/abhayrajput2005", href: PROFILE_LINKS.github },
-                  { icon: Linkedin, label: "LinkedIn", value: "linkedin.com/in/abhay-kumar-2005-", href: PROFILE_LINKS.linkedin },
-                  { icon: Download, label: "Resume", value: "Download Resume", href="/resume/Abhay_Kumar_Resume.pdf" },
+                  [
+  {
+    icon: Mail,
+    label: "Email",
+    value: "abhayrajputg0007@gmail.com",
+    href: PROFILE_LINKS.email,
+  },
+  {
+    icon: Github,
+    label: "GitHub",
+    value: "github.com/abhayrajput2005",
+    href: PROFILE_LINKS.github,
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    value: "linkedin.com/in/abhay-kumar-2005-",
+    href: PROFILE_LINKS.linkedin,
+  },
+  {
+    icon: Download,
+    label: "Resume",
+    value: "Download Resume",
+    href: PROFILE_LINKS.resume,
+  },
+]
+                 ,
                 ].map((c) => (
                   <a key={c.label} href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={`${c.label}: ${c.value}`} title={`${c.label}: ${c.value}`}
                     className={`group flex items-center gap-3 rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.5)] p-3 transition-all hover:border-[oklch(0.72_0.2_260)] hover:bg-[oklch(0.18_0.05_280/0.7)] ${FOCUS_RING_CLASS}`}>
@@ -1432,19 +1520,20 @@ function Contact() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <form onSubmit={(e) => e.preventDefault()} className="rounded-3xl glass-strong p-7">
+            <form onSubmit={handleSubmit} className="rounded-3xl glass-strong p-7">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Your name" />
-                <Field label="Email address" type="email" />
+                <Field label="Your name" name="name" value={formValues.name} onChange={updateField("name")} error={errors.name} />
+                <Field label="Email address" type="email" name="email" value={formValues.email} onChange={updateField("email")} error={errors.email} />
               </div>
-              <div className="mt-4"><Field label="Subject" /></div>
-              <div className="mt-4"><Field label="Tell me about your project" textarea /></div>
+              <div className="mt-4"><Field label="Subject" name="subject" value={formValues.subject} onChange={updateField("subject")} error={errors.subject} /></div>
+              <div className="mt-4"><Field label="Tell me about your project" textarea name="message" value={formValues.message} onChange={updateField("message")} error={errors.message} /></div>
               <Magnetic
-                onClick={() => {}}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[image:var(--gradient-aurora)] px-5 py-3.5 text-sm font-semibold text-background shadow-[0_0_30px_oklch(0.72_0.2_260/0.6)]"
-              >
-                <Send className="h-4 w-4" /> Send message
-              </Magnetic>
+  type="submit"
+  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[image:var(--gradient-aurora)] px-6 py-4 text-sm font-semibold text-background shadow-[0_0_25px_oklch(0.72_0.2_260/0.5)]"
+>
+  <Send className="h-4 w-4" />
+  Send Message
+</Magnetic>
             </form>
           </Reveal>
         </div>
