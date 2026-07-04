@@ -4,7 +4,7 @@ import { PROJECTS as PORTFOLIO_PROJECTS } from "../lib/projects";
 
 const PROFILE_LINKS = {
   github: "https://github.com/abhayrajput2005",
-  linkedin: "https://www.linkedin.com/in/abhay-kumar-2005-",
+  linkedin: "https://www.linkedin.com/in/abhay-kumar-2005-/",
   email: "mailto:abhayrajputg0007@gmail.com",
   resume: "/resume/Abhay_Kumar_Resume.pdf",
   projectLive: "https://edu-vault-nine.vercel.app/",
@@ -1466,6 +1466,33 @@ function Contact() {
     setErrors({});
   };
 
+  const contactCards = [
+    {
+      icon: Mail,
+      label: "Email",
+      value: "abhayrajputg0007@gmail.com",
+      href: PROFILE_LINKS.email,
+    },
+    {
+      icon: Github,
+      label: "GitHub",
+      value: "github.com/abhayrajput2005",
+      href: PROFILE_LINKS.github,
+    },
+    {
+      icon: Linkedin,
+      label: "LinkedIn",
+      value: "linkedin.com/in/abhay-kumar-2005-/",
+      href: PROFILE_LINKS.linkedin,
+    },
+    {
+      icon: Download,
+      label: "Resume",
+      value: "Download Resume",
+      href: PROFILE_LINKS.resume,
+    },
+  ];
+
   return (
     <section id="contact" className="relative py-28">
       <div className="mx-auto max-w-5xl px-5">
@@ -1476,36 +1503,8 @@ function Contact() {
               <h3 className="font-display text-2xl font-bold">Get in touch</h3>
               <p className="mt-2 text-sm text-muted-foreground">I usually reply within a day. Let's chat about AI, products, or your next project.</p>
               <div className="mt-6 space-y-3">
-                {[
-                  [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "abhayrajputg0007@gmail.com",
-    href: PROFILE_LINKS.email,
-  },
-  {
-    icon: Github,
-    label: "GitHub",
-    value: "github.com/abhayrajput2005",
-    href: PROFILE_LINKS.github,
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    value: "linkedin.com/in/abhay-kumar-2005-",
-    href: PROFILE_LINKS.linkedin,
-  },
-  {
-    icon: Download,
-    label: "Resume",
-    value: "Download Resume",
-    href: PROFILE_LINKS.resume,
-  },
-]
-                 ,
-                ].map((c) => (
-                  <a key={c.label} href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={`${c.label}: ${c.value}`} title={`${c.label}: ${c.value}`}
+                {contactCards.map((c) => (
+                  <a key={c.label} href={c.href ?? "#"} target={c.href?.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={`${c.label}: ${c.value}`} title={`${c.label}: ${c.value}`}
                     className={`group flex items-center gap-3 rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.5)] p-3 transition-all hover:border-[oklch(0.72_0.2_260)] hover:bg-[oklch(0.18_0.05_280/0.7)] ${FOCUS_RING_CLASS}`}>
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-[oklch(0.18_0.05_280/0.7)] text-[oklch(0.85_0.18_200)] transition-all group-hover:bg-[image:var(--gradient-aurora)] group-hover:text-background">
                       <c.icon className="h-4 w-4" />
