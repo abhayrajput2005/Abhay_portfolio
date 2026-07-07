@@ -1,3 +1,15 @@
+import eduvault01 from "../assets/projects/eduvault/eduvault-01-login.png.png";
+import eduvault02 from "../assets/projects/eduvault/eduvault-02-dashboard.png.png";
+import eduvault03 from "../assets/projects/eduvault/eduvault-03-quiz-generator.png.png";
+import eduvault04 from "../assets/projects/eduvault/eduvault-04-admin-dashboard.png.png";
+import eduvault05 from "../assets/projects/eduvault/eduvault-05-contact.png.png";
+import disk01 from "../assets/projects/disk-scheduler/disk-01-dashboard.png.png";
+import disk02 from "../assets/projects/disk-scheduler/disk-02-head-movement.png.png";
+import disk03 from "../assets/projects/disk-scheduler/disk-03-seek-distance.png.png";
+import heart01 from "../assets/projects/heart-disease/heart-01-home.png.png";
+import heart02 from "../assets/projects/heart-disease/heart-02-patient-details.png.png";
+import heart03 from "../assets/projects/heart-disease/heart-03-prediction-result.png.png";
+
 const createPreviewSvg = (title: string, subtitle: string, accent: string) => {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
@@ -92,7 +104,7 @@ export const PROJECTS: ProjectItem[] = [
     stack: ["React", "Flask", "MongoDB", "Gemini API", "Tailwind CSS"],
     gradient: "from-[oklch(0.72_0.2_250)] via-[oklch(0.68_0.25_300)] to-[oklch(0.85_0.18_200)]",
     accent: "#7C8BFF",
-    image: createPreviewSvg("EduVault AI", "AI tutor experience", "#7C8BFF"),
+    image: eduvault01,
     liveHref: "https://edu-vault-nine.vercel.app/",
     sourceHref: "https://github.com/abhayrajput2005",
     timeline: "2024 — 2025",
@@ -113,9 +125,11 @@ export const PROJECTS: ProjectItem[] = [
       { title: "Adaptive revision", description: "Personalized quizzes and learning checkpoints to improve retention.", icon: "brain" },
     ],
     screenshots: [
-      { title: "Study dashboard", alt: "EduVault AI dashboard preview", src: createScreenshotSvg("Study dashboard", "Dashboard experience", "#7C8BFF", 1) },
-      { title: "AI assistant", alt: "EduVault AI tutor preview", src: createScreenshotSvg("AI assistant", "Tutor workflow", "#7C8BFF", 2) },
-      { title: "Revision flow", alt: "EduVault AI revision experience", src: createScreenshotSvg("Revision flow", "Adaptive practice", "#7C8BFF", 3) },
+      { title: "Study dashboard", alt: "EduVault AI dashboard preview", src: eduvault01 },
+      { title: "AI assistant", alt: "EduVault AI tutor preview", src: eduvault02 },
+      { title: "Revision flow", alt: "EduVault AI revision experience", src: eduvault03 },
+      { title: "Admin console", alt: "EduVault AI admin experience", src: eduvault04 },
+      { title: "Contact experience", alt: "EduVault AI contact view", src: eduvault05 },
     ],
     challenges: [
       { title: "Prompt reliability", description: "Designed clear guardrails and response templates so the AI outputs stayed useful and structured." },
@@ -136,7 +150,7 @@ export const PROJECTS: ProjectItem[] = [
     stack: ["React", "Flask", "Chart.js", "Python"],
     gradient: "from-[oklch(0.85_0.18_200)] via-[oklch(0.72_0.2_250)] to-[oklch(0.68_0.25_300)]",
     accent: "#4FD6E8",
-    image: createPreviewSvg("Disk Scheduler", "Algorithm explorer", "#4FD6E8"),
+    image: disk01,
     liveHref: "https://github.com/abhayrajput2005",
     sourceHref: "https://github.com/abhayrajput2005",
     timeline: "2023 — 2024",
@@ -157,9 +171,9 @@ export const PROJECTS: ProjectItem[] = [
       { title: "Performance insights", description: "Seek time comparisons support fast decision-making and deeper learning.", icon: "wrench" },
     ],
     screenshots: [
-      { title: "Queue view", alt: "Disk scheduling queue preview", src: createScreenshotSvg("Queue view", "Request flow", "#4FD6E8", 1) },
-      { title: "Algorithm comparison", alt: "Disk scheduling comparison preview", src: createScreenshotSvg("Comparison view", "Algorithm comparison", "#4FD6E8", 2) },
-      { title: "Performance chart", alt: "Disk scheduling chart preview", src: createScreenshotSvg("Performance chart", "Seek time output", "#4FD6E8", 3) },
+      { title: "Queue view", alt: "Disk scheduling queue preview", src: disk01 },
+      { title: "Algorithm comparison", alt: "Disk scheduling comparison preview", src: disk02 },
+      { title: "Performance chart", alt: "Disk scheduling chart preview", src: disk03 },
     ],
     challenges: [
       { title: "Motion clarity", description: "Balanced animation timing so the simulator remained readable while still feeling dynamic." },
@@ -180,8 +194,8 @@ export const PROJECTS: ProjectItem[] = [
     stack: ["Python", "Flask", "Scikit-learn", "Pandas", "NumPy"],
     gradient: "from-[oklch(0.75_0.25_350)] via-[oklch(0.68_0.25_300)] to-[oklch(0.72_0.2_250)]",
     accent: "#FF7BA6",
-    image: createPreviewSvg("Heart Prediction", "Clinical ML workflow", "#FF7BA6"),
-    liveHref: "https://github.com/abhayrajput2005",
+    image: heart01,
+    liveHref: "https://abhayrajput2005-heart-disease-risk-prediction-ml-app-9hrdzw.streamlit.app/",
     sourceHref: "https://github.com/abhayrajput2005",
     timeline: "2023",
     role: "ML Engineer • Full Stack Builder",
@@ -201,9 +215,9 @@ export const PROJECTS: ProjectItem[] = [
       { title: "Interpretable output", description: "Prediction output is framed in a way that is easy to understand and discuss.", icon: "sparkles" },
     ],
     screenshots: [
-      { title: "Risk form", alt: "Heart disease prediction form preview", src: createScreenshotSvg("Risk form", "Patient inputs", "#FF7BA6", 1) },
-      { title: "Prediction view", alt: "Heart disease prediction report preview", src: createScreenshotSvg("Prediction report", "Risk output", "#FF7BA6", 2) },
-      { title: "Model overview", alt: "Heart disease prediction model preview", src: createScreenshotSvg("Model overview", "ML workflow", "#FF7BA6", 3) },
+      { title: "Risk form", alt: "Heart disease prediction form preview", src: heart01 },
+      { title: "Prediction view", alt: "Heart disease prediction report preview", src: heart02 },
+      { title: "Model overview", alt: "Heart disease prediction model preview", src: heart03 },
     ],
     challenges: [
       { title: "Model explainability", description: "Used a simple, transparent output strategy so users could understand the prediction without being overwhelmed by technical jargon." },

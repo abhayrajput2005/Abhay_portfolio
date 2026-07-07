@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode, type MouseEvent } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode, type MouseEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { motion, useScroll, useSpring, useTransform, useMotionValue, useInView, AnimatePresence, type Variants } from "framer-motion";
 import { PROJECTS as PORTFOLIO_PROJECTS } from "../lib/projects";
 
@@ -6,7 +6,7 @@ const PROFILE_LINKS = {
   github: "https://github.com/abhayrajput2005",
   linkedin: "https://www.linkedin.com/in/abhay-kumar-2005-/",
   email: "mailto:abhayrajputg0007@gmail.com",
-  resume: "/resume/Abhay_Kumar_Resume.pdf",
+  resume: "/Abhay_Kumar_Resume.pdf",
   projectLive: "https://edu-vault-nine.vercel.app/",
   projectSource: "https://github.com/abhayrajput2005/EduVault-Backend",
 };
@@ -18,6 +18,7 @@ import {
   Github, Linkedin, Mail, Download, ArrowDown, ExternalLink, Code2, Database, Cpu,
   Wrench, Layers, Brain, Award, Briefcase, GraduationCap, Sparkles, ArrowUp,
   MapPin, Send, Terminal, Zap, Star, GitFork, LoaderCircle, AlertCircle,
+  ChevronLeft, ChevronRight, X,
 } from "lucide-react";
 
 /* ---------- Cursor follower + spotlight ---------- */
@@ -805,13 +806,86 @@ function Skills() {
 const PROJECTS = PORTFOLIO_PROJECTS;
 
 const ProjectPreview = memo(function ProjectPreview({ project, image }: { project: (typeof PROJECTS)[number]; image?: string }) {
+  const sources = useMemo(() => {
+    const images = (project.screenshots ?? []).map((entry) => entry.src).filter(Boolean);
+    if (images.length === 0 && image) {
+      images.push(image);
+    }
+    return images;
+  }, [image, project.screenshots]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    setActiveIndex(0);
+    setIsModalOpen(false);
+  }, [project.slug]);
+
+  useEffect(() => {
+    if (!isModalOpen || sources.length <= 1) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        setActiveIndex((current) => (current + 1) % sources.length);
+      }
+      if (event.key === "ArrowLeft") {
+        setActiveIndex((current) => (current - 1 + sources.length) % sources.length);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isModalOpen, sources.length]);
+
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (sources.length <= 1) return;
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      setActiveIndex((current) => (current + 1) % sources.length);
+    }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      setActiveIndex((current) => (current - 1 + sources.length) % sources.length);
+    }
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setIsModalOpen(true);
+    }
+  };
+
+  const currentImage = sources[activeIndex] ?? image;
+  const hasMultipleImages = sources.length > 1;
+
   return (
-    <div className={`relative aspect-[16/9] overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.14_0.03_270/0.9)] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]`}>
+    <div className="relative aspect-[16/9] overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.14_0.03_270/0.9)] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
       <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-90`} />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.34),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.16),transparent_25%)]" />
       <div className="absolute inset-0 bg-grid opacity-25 mix-blend-overlay" />
-      {image ? (
-        <img src={image} alt={`${project.name} preview`} className="absolute inset-0 h-full w-full object-cover" />
+      {currentImage ? (
+        <div role="group" tabIndex={0} onKeyDown={handleKeyDown} className="group absolute inset-0 cursor-zoom-in outline-none" onClick={() => setIsModalOpen(true)}>
+          <img src={currentImage} alt={`${project.name} preview`} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_0%,rgba(255,255,255,0.08)_35%,transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          {hasMultipleImages ? (
+            <>
+              <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-between px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <button type="button" onClick={(event) => { event.stopPropagation(); setActiveIndex((current) => (current - 1 + sources.length) % sources.length); }} className="rounded-full border border-white/15 bg-[oklch(0.11_0.025_270/0.75)] p-2 text-white backdrop-blur-xl">
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={(event) => { event.stopPropagation(); setActiveIndex((current) => (current + 1) % sources.length); }} className="rounded-full border border-white/15 bg-[oklch(0.11_0.025_270/0.75)] p-2 text-white backdrop-blur-xl">
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/15 bg-[oklch(0.11_0.025_270/0.7)] px-2.5 py-1.5 backdrop-blur-xl">
+                {sources.map((_, index) => (
+                  <button key={`${project.slug}-${index}`} type="button" aria-label={`Show screenshot ${index + 1}`} onClick={(event) => { event.stopPropagation(); setActiveIndex(index); }} className={`h-2.2 w-2.2 rounded-full transition-all ${index === activeIndex ? "bg-white" : "bg-white/40"}`} />
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
       ) : (
         <div className="relative z-10 flex h-full flex-col justify-between rounded-[1rem] border border-white/15 bg-[oklch(0.11_0.025_270/0.72)] p-4 backdrop-blur-xl">
           <div className="flex items-center justify-between">
@@ -852,6 +926,34 @@ const ProjectPreview = memo(function ProjectPreview({ project, image }: { projec
       <div className="absolute right-4 top-4 rounded-full border border-white/15 bg-[oklch(0.11_0.025_270/0.7)] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.3em] text-white/80 backdrop-blur-xl">
         {project.accent}
       </div>
+      <AnimatePresence>
+        {isModalOpen && currentImage ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[90] flex items-center justify-center bg-[rgba(2,6,23,0.8)] px-4 py-6 backdrop-blur-xl">
+            <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} transition={{ duration: 0.2 }} className="relative w-full max-w-5xl rounded-[1.5rem] border border-white/10 bg-[oklch(0.11_0.025_270/0.88)] p-3 shadow-[0_35px_120px_rgba(0,0,0,0.45)]">
+              <button type="button" onClick={() => setIsModalOpen(false)} className={`absolute right-3 top-3 z-10 rounded-full border border-white/10 bg-white/10 p-2 text-white transition hover:bg-white/15 ${FOCUS_RING_CLASS}`}>
+                <X className="h-4 w-4" />
+              </button>
+              <img src={currentImage} alt={`${project.name} fullscreen preview`} className="max-h-[75vh] w-full rounded-[1.1rem] object-contain" />
+              <div className="flex items-center justify-between gap-3 px-2 pb-1 pt-4">
+                <div>
+                  <div className="text-sm font-semibold text-white">{project.name}</div>
+                  <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">{hasMultipleImages ? "Use ← and → to navigate" : "Tap outside or close to exit"}</div>
+                </div>
+                {hasMultipleImages ? (
+                  <div className="flex items-center gap-2">
+                    <button type="button" onClick={() => setActiveIndex((current) => (current - 1 + sources.length) % sources.length)} className={`rounded-full border border-white/10 bg-white/10 p-2 text-white transition hover:bg-white/15 ${FOCUS_RING_CLASS}`}>
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button type="button" onClick={() => setActiveIndex((current) => (current + 1) % sources.length)} className={`rounded-full border border-white/10 bg-white/10 p-2 text-white transition hover:bg-white/15 ${FOCUS_RING_CLASS}`}>
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 });
@@ -1009,7 +1111,7 @@ function Experience() {
   );
 }
 
-/* ---------- Certifications ---------- */
+/* ---------- Internships ---------- */
 const CERTS = [
   { title: "IBM SkillsBuild", desc: "Backend Development & Cloud Foundations", icon: Award },
   { title: "Infosys Springboard", desc: "AI & Machine Learning Internship", icon: Brain },
@@ -1616,7 +1718,7 @@ export default function Portfolio() {
         <Skills />
         <Projects />
         <Experience />
-        <Certifications />
+        <Internships />
         <GitHub />
         <Contact />
       </main>
