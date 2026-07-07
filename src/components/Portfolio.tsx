@@ -186,7 +186,7 @@ function Nav() {
 }
 
 /* ---------- Magnetic button ---------- */
-function Magnetic({ children, className = "", href, onClick, whileHover, whileTap, transition, ariaLabel, type = "button" }: { children: ReactNode; className?: string; href?: string; onClick?: () => void; whileHover?: any; whileTap?: any; transition?: any; ariaLabel?: string; type?: "button" | "submit" | "reset" }) {
+function Magnetic({ children, className = "", href, onClick, whileHover, whileTap, transition, ariaLabel, type = "button", download, target, rel }: { children: ReactNode; className?: string; href?: string; onClick?: () => void; whileHover?: any; whileTap?: any; transition?: any; ariaLabel?: string; type?: "button" | "submit" | "reset"; download?: boolean; target?: string; rel?: string }) {
   const ref = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const x = useMotionValue(0); const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 200, damping: 15 });
@@ -201,8 +201,9 @@ function Magnetic({ children, className = "", href, onClick, whileHover, whileTa
   return (
     <Comp
       ref={ref as any} href={href} onClick={onClick} aria-label={ariaLabel} type={href ? undefined : type}
-      target={href?.startsWith("http") ? "_blank" : undefined}
-      rel={href?.startsWith("http") ? "noreferrer" : undefined}
+      target={target ?? (href?.startsWith("http") ? "_blank" : undefined)}
+      rel={rel ?? (href?.startsWith("http") ? "noreferrer" : undefined)}
+      download={download}
       onMouseMove={onMove as any} onMouseLeave={onLeave}
       whileHover={whileHover}
       whileTap={whileTap}
@@ -465,7 +466,7 @@ function Hero() {
               <Sparkles className="relative h-4 w-4" />
               <span className="relative">View Projects</span>
             </Magnetic>
-            <Magnetic href={PROFILE_LINKS.resume} whileHover={{ scale: 1.03, y: -3, boxShadow: "0 16px 45px rgba(15,23,42,0.24)" }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 260, damping: 20 }} className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-6 py-3.5 text-sm font-semibold text-foreground/95 shadow-[0_10px_35px_rgba(15,23,42,0.24)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-[oklch(0.72_0.2_260/0.18)]">
+            <Magnetic href={PROFILE_LINKS.resume} download target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.03, y: -3, boxShadow: "0 16px 45px rgba(15,23,42,0.24)" }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 260, damping: 20 }} className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-6 py-3.5 text-sm font-semibold text-foreground/95 shadow-[0_10px_35px_rgba(15,23,42,0.24)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-[oklch(0.72_0.2_260/0.18)]">
               <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-[-1px]" /> Request Resume
             </Magnetic>
             <Magnetic href={PROFILE_LINKS.github} ariaLabel="View GitHub profile" whileHover={{ scale: 1.03, y: -3 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 240, damping: 16 }} className={`grid h-11 w-11 place-items-center rounded-full glass transition-all duration-300 hover:-translate-y-1 hover:text-[oklch(0.85_0.18_200)] ${FOCUS_RING_CLASS}`}>
@@ -548,9 +549,9 @@ const SectionHeader = memo(function SectionHeader({ kicker, title, sub }: { kick
 
 /* ---------- About ---------- */
 const STATS = [
-  { label: "Projects Completed", value: 15, suffix: "+" },
+  { label: "Projects Completed", value: 12, suffix: "+" },
   { label: "Technologies", value: 20, suffix: "+" },
-  { label: "Internships", value: 2, suffix: "" },
+  { label: "Internships", value: 4, suffix: "" },
   { label: "Certifications", value: 6, suffix: "+" },
   { label: "Years Learning", value: 4, suffix: "+" },
 ];
@@ -940,25 +941,32 @@ function Projects() {
 /* ---------- Experience ---------- */
 const EXP = [
   {
-    company: "Infosys Springboard",
-    role: "AI & ML Internship",
-    duration: "2025",
-    description: "Built applied ML workflows, explored model evaluation, and contributed to data-driven product thinking.",
-    tech: ["Python", "TensorFlow", "Pandas", "Flask"],
+    company: "Labmentix Pvt. Ltd.",
+    role: "AI & ML Intern",
+    duration: "Sep 2025 – Nov 2025",
+    description: "Worked on machine learning models, data preprocessing, model evaluation, and AI-powered application development. Built and optimized ML workflows while gaining hands-on experience with real-world AI solutions.",
+    tech: ["Python", "TensorFlow", "Scikit-learn", "Pandas", "NumPy", "Machine Learning"],
   },
   {
     company: "IBM SkillsBuild",
-    role: "Backend Development Training",
-    duration: "2024",
-    description: "Focused on REST APIs, authentication, databases, and building reliable backend systems.",
-    tech: ["Flask", "Node.js", "MongoDB", "REST APIs"],
+    role: "AI Automation & Agentic AI Intern",
+    duration: "2025",
+    description: "Completed a virtual internship focused on AI Automation and Agentic AI. Built AI-powered workflows, explored prompt engineering, and learned practical applications of Generative AI in solving real-world problems.",
+    tech: ["Generative AI", "AI Agents", "Prompt Engineering", "AI Automation"],
   },
   {
-    company: "B.Tech CSE (AI/ML)",
-    role: "Student • AI & Software Engineering",
-    duration: "2022 — Present",
-    description: "Strengthened my foundation in AI, machine learning, OS, DBMS, and modern product engineering.",
-    tech: ["Python", "React", "System Design", "ML"],
+    company: "Infosys Springboard 6.0 (Batch 13)",
+    role: "AI & ML Internship",
+    duration: "2025",
+    description: "Successfully completed the Infosys Springboard 6.0 AI & Machine Learning Internship Program. Gained practical experience in machine learning fundamentals, model development, data preprocessing, and AI-driven problem solving through industry-oriented projects and learning modules.",
+    tech: ["Python", "Machine Learning", "TensorFlow", "Pandas", "Data Analysis"],
+  },
+  {
+    company: "NOVEM CONTROL",
+    role: "Backend Developer Intern",
+    duration: "2024",
+    description: "Developed REST APIs, implemented authentication, integrated MongoDB databases, and contributed to backend development for modern web applications.",
+    tech: ["Node.js", "Express.js", "MongoDB", "REST APIs"],
   },
 ];
 
@@ -966,7 +974,7 @@ function Experience() {
   return (
     <section id="experience" className="relative py-28">
       <div className="mx-auto max-w-6xl px-5">
-        <SectionHeader kicker="Experience" title="Selected experience" sub="A refined snapshot of the roles, projects, and learning moments that shaped my path." />
+        <SectionHeader kicker="Experience" title="Experience" sub="A refined snapshot of the roles, projects, and learning moments that shaped my path." />
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {EXP.map((item, index) => (
             <motion.article key={item.company} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }} className="group relative">
@@ -1008,11 +1016,11 @@ const CERTS = [
   { title: "AI & ML Internship", desc: "Real-world model development", icon: Cpu },
   { title: "Backend Development Training", desc: "APIs · Databases · Auth", icon: Terminal },
 ];
-function Certifications() {
+function Internships() {
   return (
     <section className="relative py-28">
       <div className="mx-auto max-w-6xl px-5">
-        <SectionHeader kicker="Credentials" title="Certifications" />
+        <SectionHeader kicker="Credentials" title="Internships" />
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {CERTS.map((c, i) => (
             <Reveal key={c.title} delay={i * 0.05}>
@@ -1066,7 +1074,7 @@ type GitHubData = {
 };
 
 const GITHUB_CACHE_TTL_MS = 10 * 60 * 1000;
-const GITHUB_USERNAME = "abhaykumar";
+const GITHUB_USERNAME = "abhayrajput2005";
 
 function formatCompactNumber(value: number) {
   return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(value);
@@ -1115,7 +1123,7 @@ async function loadGitHubData(): Promise<GitHubData> {
   const repos = (await reposResponse.json()) as GitHubRepo[];
 
   const rankedRepos = [...repos]
-    .filter((repo) => !repo.name.startsWith(".") && repo.name !== "abhaykumar")
+    .filter((repo) => !repo.name.startsWith(".") && repo.name !== "abhayrajput2005")
     .sort((a, b) => b.stargazers_count + b.forks_count - (a.stargazers_count + a.forks_count))
     .slice(0, 6);
 
@@ -1503,18 +1511,21 @@ function Contact() {
               <h3 className="font-display text-2xl font-bold">Get in touch</h3>
               <p className="mt-2 text-sm text-muted-foreground">I usually reply within a day. Let's chat about AI, products, or your next project.</p>
               <div className="mt-6 space-y-3">
-                {contactCards.map((c) => (
-                  <a key={c.label} href={c.href ?? "#"} target={c.href?.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={`${c.label}: ${c.value}`} title={`${c.label}: ${c.value}`}
-                    className={`group flex items-center gap-3 rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.5)] p-3 transition-all hover:border-[oklch(0.72_0.2_260)] hover:bg-[oklch(0.18_0.05_280/0.7)] ${FOCUS_RING_CLASS}`}>
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[oklch(0.18_0.05_280/0.7)] text-[oklch(0.85_0.18_200)] transition-all group-hover:bg-[image:var(--gradient-aurora)] group-hover:text-background">
-                      <c.icon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{c.label}</div>
-                      <div className="text-sm font-medium">{c.value}</div>
-                    </div>
-                  </a>
-                ))}
+                {contactCards.map((c) => {
+                  const isResume = c.label === "Resume";
+                  return (
+                    <a key={c.label} href={c.href ?? "#"} target={isResume ? "_blank" : c.href?.startsWith("http") ? "_blank" : undefined} rel={isResume ? "noopener noreferrer" : "noreferrer"} download={isResume} aria-label={`${c.label}: ${c.value}`} title={`${c.label}: ${c.value}`}
+                      className={`group flex items-center gap-3 rounded-2xl border border-border bg-[oklch(0.12_0.03_270/0.5)] p-3 transition-all hover:border-[oklch(0.72_0.2_260)] hover:bg-[oklch(0.18_0.05_280/0.7)] ${FOCUS_RING_CLASS}`}>
+                      <div className="grid h-10 w-10 place-items-center rounded-xl bg-[oklch(0.18_0.05_280/0.7)] text-[oklch(0.85_0.18_200)] transition-all group-hover:bg-[image:var(--gradient-aurora)] group-hover:text-background">
+                        <c.icon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{c.label}</div>
+                        <div className="text-sm font-medium">{c.value}</div>
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </Reveal>

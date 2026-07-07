@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "Abhay Kumar — AI/ML Engineer & Full Stack Developer" },
       { name: "twitter:description", content: "AI engineer and full-stack developer crafting intelligent, beautiful software." },
       { name: "twitter:image", content: `${siteUrl}/og-image.svg` },
-      { name: "twitter:site", content: "@abhaykumar" },
+      { name: "twitter:site", content: "@abhayrajput2005" },
     ],
     links: [
       { rel: "canonical", href: siteUrl },
@@ -111,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "Abhay Kumar",
           jobTitle: "AI/ML Engineer & Full Stack Developer",
           url: siteUrl,
-          sameAs: ["https://github.com/abhaykumar", "https://www.linkedin.com/in/abhay-kumar"],
+          sameAs: ["https://github.com/abhayrajput2005", "https://www.linkedin.com/in/abhay-kumar"],
           description: "AI/ML engineer and full-stack developer building modern AI-powered applications and polished web experiences.",
         }),
       },
