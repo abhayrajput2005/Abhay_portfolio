@@ -172,33 +172,7 @@ Deep Learning application for real-time face mask detection using OpenCV and Ten
 
 ---
 
-# 📸 Preview
 
-## Home Page
-
-> Add homepage screenshot here.
-
-```
-public/screenshots/home.png
-```
-
-## Projects
-
-> Add project section screenshot.
-
-```
-public/screenshots/projects.png
-```
-
-## Contact
-
-> Add contact page screenshot.
-
-```
-public/screenshots/contact.png
-```
-
----
 
 # ⚙️ Installation
 
